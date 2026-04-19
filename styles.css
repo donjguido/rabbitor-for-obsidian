@@ -1,0 +1,1028 @@
+/* === Highlight decorations (in editor) === */
+.annotator-hl {
+  border-radius: 2px;
+  padding: 1px 2px;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.annotator-hl:hover {
+  filter: brightness(1.2);
+}
+
+.annotator-hl-purple { background: color-mix(in srgb, var(--color-purple) 25%, transparent); border-bottom: 2px solid color-mix(in srgb, var(--color-purple) 55%, transparent); }
+.annotator-hl-yellow { background: color-mix(in srgb, var(--color-yellow) 25%, transparent); border-bottom: 2px solid color-mix(in srgb, var(--color-yellow) 55%, transparent); }
+.annotator-hl-blue   { background: color-mix(in srgb, var(--color-blue) 25%, transparent);   border-bottom: 2px solid color-mix(in srgb, var(--color-blue) 55%, transparent); }
+.annotator-hl-green  { background: color-mix(in srgb, var(--color-green) 25%, transparent);  border-bottom: 2px solid color-mix(in srgb, var(--color-green) 55%, transparent); }
+.annotator-hl-pink   { background: color-mix(in srgb, var(--color-pink) 25%, transparent);   border-bottom: 2px solid color-mix(in srgb, var(--color-pink) 55%, transparent); }
+.annotator-hl-orange { background: color-mix(in srgb, var(--color-orange) 25%, transparent); border-bottom: 2px solid color-mix(in srgb, var(--color-orange) 55%, transparent); }
+.annotator-hl-red    { background: color-mix(in srgb, var(--color-red) 25%, transparent);    border-bottom: 2px solid color-mix(in srgb, var(--color-red) 55%, transparent); }
+.annotator-hl-teal   { background: color-mix(in srgb, var(--color-cyan) 25%, transparent);   border-bottom: 2px solid color-mix(in srgb, var(--color-cyan) 55%, transparent); }
+
+/* === Highlight badges (in editor) === */
+.annotator-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 600;
+  margin-left: 2px;
+  vertical-align: super;
+  cursor: pointer;
+  color: var(--background-primary);
+  line-height: 1;
+}
+
+.annotator-badge:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.annotator-badge-purple { background: var(--color-purple); }
+.annotator-badge-yellow { background: var(--color-yellow); }
+.annotator-badge-blue   { background: var(--color-blue); }
+.annotator-badge-green  { background: var(--color-green); }
+.annotator-badge-pink   { background: var(--color-pink); }
+.annotator-badge-orange { background: var(--color-orange); }
+.annotator-badge-red    { background: var(--color-red); }
+.annotator-badge-teal   { background: var(--color-cyan); }
+
+/* === Panel === */
+.annotator-panel {
+  font-family: var(--font-interface);
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.annotator-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* === Tabs === */
+.annotator-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--background-modifier-border);
+  flex-shrink: 0;
+}
+
+.annotator-tab {
+  flex: 1;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: color 0.15s, border-color 0.15s;
+  min-height: 44px;
+}
+
+.annotator-tab:hover {
+  color: var(--text-normal);
+}
+
+.annotator-tab:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: -2px;
+}
+
+.annotator-tab.active {
+  color: var(--interactive-accent);
+  border-bottom-color: var(--interactive-accent);
+}
+
+.annotator-tab-icon {
+  display: flex;
+  align-items: center;
+}
+
+.annotator-tab-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* === Empty state === */
+.annotator-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* === Annotation list === */
+.annotator-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* === Annotation cards === */
+.annotator-card {
+  background: var(--background-secondary);
+  border-radius: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--background-modifier-border);
+  cursor: pointer;
+  transition: border-color 0.15s;
+  position: relative;
+}
+
+.annotator-card:hover {
+  border-color: var(--background-modifier-border-hover);
+}
+
+.annotator-card:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.annotator-card.selected {
+  border-color: var(--interactive-accent);
+}
+
+.annotator-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.annotator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.annotator-dot-purple { background: var(--color-purple); }
+.annotator-dot-yellow { background: var(--color-yellow); }
+.annotator-dot-blue   { background: var(--color-blue); }
+.annotator-dot-green  { background: var(--color-green); }
+.annotator-dot-pink   { background: var(--color-pink); }
+.annotator-dot-orange { background: var(--color-orange); }
+.annotator-dot-red    { background: var(--color-red); }
+.annotator-dot-teal   { background: var(--color-cyan); }
+
+.annotator-card-label {
+  flex: 1;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-normal);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.annotator-card-num {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.annotator-card-excerpt {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.annotator-card-summary {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-faint);
+}
+
+.annotator-card-summary-icon {
+  display: flex;
+  align-items: center;
+}
+
+.annotator-card-summary-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.annotator-card-delete {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.annotator-card:hover .annotator-card-delete,
+.annotator-card-delete:focus-visible {
+  opacity: 1;
+}
+
+.annotator-card-delete:hover {
+  color: var(--text-error);
+}
+
+/* === Chat === */
+.annotator-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 8px;
+}
+
+.annotator-chat-title-prefix {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-faint);
+}
+
+.annotator-chat-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-normal);
+  cursor: text;
+}
+
+.annotator-chat-title:hover {
+  color: var(--text-accent);
+}
+
+/* === Rename input (shared) === */
+.annotator-rename-input {
+  flex: 1;
+  background: var(--background-secondary);
+  border: 1px solid var(--interactive-accent);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-interface);
+  color: var(--text-normal);
+  outline: none;
+  min-width: 0;
+}
+
+.annotator-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 8px;
+  min-height: 200px;
+  max-height: calc(100vh - 300px);
+}
+
+.annotator-chat-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.annotator-chat-msg {
+  margin: 6px 0;
+  padding: 4px 0;
+}
+
+.annotator-chat-msg-ai {
+  background: var(--background-secondary);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.annotator-chat-role {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+
+.annotator-chat-role-user { color: var(--text-accent); }
+.annotator-chat-role-ai   { color: var(--interactive-accent); }
+
+.annotator-chat-body {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.annotator-chat-body code {
+  background: var(--background-secondary-alt);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: var(--font-monospace);
+}
+
+.annotator-ref-link {
+  color: var(--text-accent);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.annotator-ref-link:hover {
+  text-decoration: underline;
+}
+
+/* === Chat input === */
+.annotator-chat-input {
+  border-top: 1px solid var(--background-modifier-border);
+  padding: 8px 0;
+  margin-top: auto;
+}
+
+.annotator-chat-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  position: relative;
+}
+
+.annotator-chat-input-row input,
+.annotator-chat-textarea {
+  flex: 1;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-normal);
+  font-family: var(--font-interface);
+}
+
+.annotator-chat-textarea {
+  resize: none;
+  min-height: 32px;
+  max-height: 160px;
+  line-height: 1.4;
+  overflow-y: hidden;
+  box-sizing: border-box;
+}
+
+.annotator-chat-input-row input:focus,
+.annotator-chat-textarea:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
+.annotator-send-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 6px;
+  background: var(--interactive-accent);
+  border: none;
+  color: var(--text-on-accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: opacity 0.15s;
+}
+
+.annotator-send-btn:hover {
+  opacity: 0.9;
+}
+
+.annotator-send-btn:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.annotator-send-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* === Selection menu (floating tooltip) === */
+.annotator-selection-menu {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  gap: 6px;
+  box-shadow: var(--shadow-s);
+}
+
+.annotator-color-btn {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.annotator-color-btn:hover {
+  border-color: var(--text-normal);
+  transform: scale(1.15);
+}
+
+.annotator-color-btn:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+
+/* === Export cards === */
+.annotator-export-card {
+  background: var(--background-secondary);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--background-modifier-border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: border-color 0.15s;
+  min-height: 44px;
+}
+
+.annotator-export-card:hover {
+  border-color: var(--background-modifier-border-hover);
+}
+
+.annotator-export-card:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.annotator-export-icon {
+  display: flex;
+  color: var(--text-muted);
+}
+
+.annotator-export-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.annotator-export-text {
+  flex: 1;
+}
+
+.annotator-export-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-normal);
+}
+
+.annotator-export-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* === Note suggest popup === */
+.annotator-suggest-popup {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-s);
+  z-index: var(--layer-popover);
+  margin-bottom: 4px;
+}
+
+.annotator-suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  min-height: 44px;
+  transition: background 0.1s;
+}
+
+.annotator-suggest-item:hover,
+.annotator-suggest-item.is-selected {
+  background: var(--background-modifier-hover);
+}
+
+.annotator-suggest-item:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: -2px;
+}
+
+.annotator-suggest-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-normal);
+}
+
+.annotator-suggest-path {
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-left: auto;
+}
+
+/* === Wiki-links in chat messages === */
+.annotator-wikilink {
+  color: var(--text-accent);
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.annotator-wikilink:hover {
+  text-decoration-style: solid;
+}
+
+.annotator-wikilink.is-unresolved {
+  color: var(--text-faint);
+  opacity: 0.7;
+}
+
+/* === Slash command suggest dropdown === */
+.annotator-command-suggest {
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s);
+  margin-bottom: 4px;
+}
+
+.annotator-command-suggest.annotator-hidden {
+  display: none;
+}
+
+.annotator-command-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.annotator-command-item:hover,
+.annotator-command-item.is-selected {
+  background: var(--background-modifier-hover);
+}
+
+.annotator-command-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.annotator-command-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.annotator-command-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.annotator-command-trigger {
+  font-size: var(--font-ui-small);
+  font-weight: 600;
+  color: var(--text-normal);
+  font-family: var(--font-monospace);
+}
+
+.annotator-command-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === AI loading state === */
+.annotator-chat-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+  margin: 6px 0;
+}
+
+.annotator-chat-loading-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.annotator-chat-loading-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.annotator-chat-loading-hint {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-style: italic;
+  padding-left: 4px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.annotator-chat-loading-hint.is-hidden {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.annotator-chat-loading-slow-hint {
+  font-size: 11px;
+  color: var(--text-warning);
+  padding: 4px 4px 0;
+  margin-top: 2px;
+}
+
+.annotator-chat-loading-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: annotator-pulse 1.4s ease-in-out infinite;
+}
+
+.annotator-chat-loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.annotator-chat-loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes annotator-pulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+.annotator-chat-loading-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* === AI error message === */
+.annotator-chat-error {
+  background: color-mix(in srgb, var(--text-error) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-error) 25%, transparent);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 6px 0;
+}
+
+.annotator-chat-error-text {
+  font-size: 11px;
+  color: var(--text-error);
+}
+
+.annotator-settings-link {
+  color: var(--interactive-accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.annotator-settings-link:hover {
+  color: var(--interactive-accent-hover);
+}
+
+/* === Disabled send button === */
+.annotator-send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.annotator-chat-input-row input:disabled,
+.annotator-chat-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* === System info message === */
+.annotator-chat-system {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 4px 0;
+  margin: 2px 0;
+}
+
+/* === Streaming assistant bubble === */
+.annotator-chat-msg-streaming .annotator-chat-body::after {
+  content: "\258C";
+  display: inline-block;
+  margin-left: 2px;
+  opacity: 0.6;
+  animation: annotator-caret-blink 1s steps(2, start) infinite;
+  color: var(--text-muted);
+}
+
+@keyframes annotator-caret-blink {
+  to { visibility: hidden; }
+}
+
+/* === Branching UI === */
+
+/* Fork picker in chat header */
+.annotator-fork-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.annotator-fork-select {
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+.annotator-fork-rename-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.annotator-fork-rename-input {
+  background: var(--background-primary);
+  color: var(--text-normal);
+  border: 1px solid var(--interactive-accent);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  min-height: 24px;
+}
+
+/* Inline fork button on each message */
+.annotator-chat-msg {
+  position: relative;
+}
+
+.annotator-msg-fork-btn {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.annotator-chat-msg:hover .annotator-msg-fork-btn,
+.annotator-chat-msg:focus-within .annotator-msg-fork-btn {
+  opacity: 1;
+}
+
+/* Control row under assistant messages */
+.annotator-msg-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.annotator-msg-nav-btn {
+  background: transparent;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  min-width: 24px;
+  min-height: 24px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.annotator-msg-nav-btn:hover:not(:disabled) {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.annotator-msg-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.annotator-msg-nav-label {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Image attachments --- */
+
+.annotator-chat-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 8px 0 8px;
+}
+
+.annotator-chat-attachments.annotator-hidden {
+  display: none;
+}
+
+.annotator-chat-attachment-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  max-width: 220px;
+  min-height: 44px;
+}
+
+.annotator-chat-attachment-thumb {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.annotator-chat-attachment-label {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.annotator-chat-attachment-remove {
+  flex-shrink: 0;
+}
+
+.annotator-chat-input.is-drop-target {
+  outline: 2px dashed var(--interactive-accent);
+  outline-offset: -2px;
+}
+
+.annotator-chat-warning {
+  padding: 4px 8px;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-warning);
+}
+
+.annotator-chat-warning.annotator-hidden {
+  display: none;
+}
+
+.annotator-chat-history-image {
+  display: block;
+  max-height: 96px;
+  width: auto;
+  margin-top: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.annotator-chat-history-image:hover {
+  filter: brightness(1.05);
+}
+
+.annotator-chat-history-image.is-broken {
+  cursor: default;
+  padding: 6px 8px;
+  background-color: var(--background-modifier-error);
+  color: var(--text-on-accent);
+  font-size: var(--font-ui-smaller);
+  border-radius: 4px;
+}
+
+.annotator-suggest-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 4px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  background-color: var(--background-modifier-border);
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+/* --- /attach: document + context chip variants --- */
+
+.annotator-chat-attachment-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.annotator-chat-attachment-chip.is-document .annotator-chat-attachment-icon {
+  color: var(--text-accent);
+}
+
+.annotator-chat-attachment-chip.is-context .annotator-chat-attachment-icon {
+  color: var(--text-muted);
+}
+
+.annotator-chat-attachment-badge {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background-color: var(--background-modifier-border);
+  border-radius: 3px;
+  padding: 1px 4px;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+
+/* History-side document chip */
+.annotator-chat-history-document {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  background-color: var(--background-secondary);
+  max-width: 320px;
+  min-height: 44px;
+}
+
+.annotator-chat-history-document.is-clickable {
+  cursor: pointer;
+}
+
+.annotator-chat-history-document.is-clickable:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.annotator-chat-history-document.is-broken {
+  color: var(--text-on-accent);
+  background-color: var(--background-modifier-error);
+  border-color: var(--background-modifier-error);
+  cursor: default;
+}
+
+.annotator-chat-history-document-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-accent);
+  flex-shrink: 0;
+}
+
+.annotator-chat-history-document-label {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
+}

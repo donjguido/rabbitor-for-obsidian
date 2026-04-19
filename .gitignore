@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output (esbuild generates this from src/)
+main.js
+
+# Source maps
+*.js.map
+
+# Obsidian runtime data (created when plugin is loaded)
+data.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# Internal / dev-only — not for public repo
+.claude/
+.agents/
+CLAUDE.md
+ANNOTATOR_OBSIDIAN_PLUGIN_DESIGN.md
+skills-lock.json
+docs/superpowers/

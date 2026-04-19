@@ -1,3 +1,4 @@
+import { requestUrl } from "obsidian";
 import type { AIProvider } from "./AIProvider";
 import type { ProviderConfig, MessageContent } from "../types";
 import { getText, getImageParts, getDocumentParts } from "./messageContent";
@@ -28,7 +29,7 @@ export class OpenAICompatibleProvider implements AIProvider {
     messages: Array<{ role: "user" | "assistant"; content: MessageContent }>,
     systemPrompt: string,
     options: { maxTokens: number; temperature: number },
-    signal?: AbortSignal,
+    _signal?: AbortSignal,
     onToken?: (chunk: string) => void
   ): Promise<string> {
     const apiMessages: Array<{ role: string; content: unknown }> = [
@@ -43,9 +44,8 @@ export class OpenAICompatibleProvider implements AIProvider {
       const images = getImageParts(m.content);
       const documents = getDocumentParts(m.content);
       if (documents.length > 0) {
-        console.warn(
-          `[annotator] OpenAI-compatible provider does not support PDF documents; dropping ${documents.length} part(s).`
-        );
+        // PDFs are not supported by OpenAI-compatible chat completions;
+        // silently drop rather than logging (rule 21).
       }
       const parts: Array<Record<string, unknown>> = [];
       if (text) parts.push({ type: "text", text });
@@ -59,7 +59,8 @@ export class OpenAICompatibleProvider implements AIProvider {
       apiMessages.push({ role: m.role, content: parts });
     }
 
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+    const response = await requestUrl({
+      url: `${this.baseUrl}/chat/completions`,
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -70,69 +71,25 @@ export class OpenAICompatibleProvider implements AIProvider {
         max_tokens: options.maxTokens,
         temperature: options.temperature,
         messages: apiMessages,
-        stream: true,
       }),
-      signal,
+      throw: false,
     });
 
-    if (!response.ok) {
-      const body = await response.text();
-      let errorMessage: string;
-      try {
-        const parsed = JSON.parse(body);
-        errorMessage = parsed?.error?.message || `API error ${response.status}`;
-      } catch {
-        errorMessage = `API error ${response.status}: ${body.slice(0, 200)}`;
-      }
-      throw new Error(errorMessage);
+    if (response.status < 200 || response.status >= 300) {
+      const message = response.json?.error?.message
+        ?? `API error ${response.status}: ${(response.text ?? "").slice(0, 200)}`;
+      throw new Error(message);
     }
 
-    if (!response.body) {
-      throw new Error("No response body from stream");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let buffer = "";
-    let full = "";
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-
-        let newlineIdx: number;
-        while ((newlineIdx = buffer.indexOf("\n")) !== -1) {
-          const line = buffer.slice(0, newlineIdx).trim();
-          buffer = buffer.slice(newlineIdx + 1);
-          if (!line.startsWith("data: ")) continue;
-          const payload = line.slice(6);
-          if (payload === "[DONE]") break;
-          let event: any;
-          try {
-            event = JSON.parse(payload);
-          } catch {
-            continue;
-          }
-          const chunk = event?.choices?.[0]?.delta?.content;
-          if (chunk) {
-            full += chunk;
-            onToken?.(chunk);
-          }
-        }
-      }
-    } finally {
-      try {
-        reader.releaseLock();
-      } catch {
-        // Reader may already be closed
-      }
-    }
+    const choices = response.json?.choices as
+      | Array<{ message?: { content?: string } }>
+      | undefined;
+    const full = choices?.[0]?.message?.content ?? "";
 
     if (full.length === 0) {
-      throw new Error("No text content in streamed response");
+      throw new Error("No text content in response");
     }
+    onToken?.(full);
     return full;
   }
 
@@ -142,20 +99,19 @@ export class OpenAICompatibleProvider implements AIProvider {
       headers.authorization = `Bearer ${this.config.apiKey}`;
     }
 
-    const response = await fetch(`${this.baseUrl}/models`, {
+    const response = await requestUrl({
+      url: `${this.baseUrl}/models`,
       method: "GET",
       headers,
+      throw: false,
     });
 
-    if (!response.ok) {
+    if (response.status < 200 || response.status >= 300) {
       throw new Error(`Failed to fetch models: ${response.status}`);
     }
 
-    const body = await response.json();
-    const models: string[] = (body.data || [])
-      .map((m: { id: string }) => m.id)
-      .sort();
-    return models;
+    const data = response.json?.data as Array<{ id: string }> | undefined;
+    return (data ?? []).map(m => m.id).sort();
   }
 
   async validateConfig(): Promise<boolean> {

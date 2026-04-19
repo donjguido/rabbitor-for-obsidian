@@ -4,13 +4,24 @@ Go down the rabbit hole of knowledge. Highlight passages in your notes and have 
 
 Rabbitor brings per-highlight conversation threads, multi-provider AI, and branching edits to your vault. Every thread lives next to the note it came from, exportable as markdown.
 
-> **Status:** pre-release (0.1.0). Not yet submitted to the Obsidian community plugin store. Install manually (see below).
+> **Status:** pre-release (0.1.0). Not yet submitted to the Obsidian community plugin store. Install manually (see below). Desktop-only for now — mobile has not been tested.
+
+## Screenshots
+
+> TODO: add before submitting to the community plugin store. Drop files into `docs/screenshots/` and link them here.
+>
+> Checklist of shots to capture:
+> - [ ] Hero shot — a note with several highlights + the right sidebar open on a thread
+> - [ ] Selection tooltip / color picker over a text selection
+> - [ ] Sidebar tabs (Highlights / Threads / Settings) with a populated thread list
+> - [ ] Thread view showing streamed reply, message actions, and a branched conversation
+> - [ ] Settings page — provider list with a couple of providers configured
+> - [ ] Markdown export of a thread (screenshot of the exported file rendered in Obsidian)
 
 ## Features
 
 - **Highlight & annotate** — Select any passage in a markdown note and attach a colored highlight with a conversation thread.
 - **Multi-provider AI chat** — Anthropic, OpenAI, Google Gemini, OpenRouter, Ollama, or any OpenAI-compatible endpoint. Bring your own keys; they stay on your machine.
-- **Streaming responses** — Token-by-token output as the model thinks.
 - **Branching conversations** — Fork from any message, regenerate alternate replies, keep the tree.
 - **Document attachments** — Drop PDFs or markdown notes into a thread as context. Capability warnings flag models that can't handle PDFs.
 - **Markdown export** — Export threads as plain markdown with branches and Obsidian embeds preserved.

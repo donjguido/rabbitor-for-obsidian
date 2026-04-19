@@ -133,12 +133,13 @@ export class AnnotationList {
   }
 
   private startRename(labelEl: HTMLElement, ann: Annotation): void {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = ann.label;
-    input.placeholder = "Untitled";
-    input.className = "annotator-rename-input";
-    input.setAttribute("aria-label", "Rename annotation");
+    const input = createEl("input", {
+      type: "text",
+      value: ann.label,
+      placeholder: "Untitled",
+      cls: "annotator-rename-input",
+      attr: { "aria-label": "Rename annotation" },
+    });
 
     const commit = () => {
       const newLabel = input.value.trim();
@@ -147,7 +148,7 @@ export class AnnotationList {
       }
       // Replace input back with span
       labelEl.textContent = newLabel || "Untitled";
-      labelEl.style.display = "";
+      labelEl.removeClass("annotator-hidden");
       input.remove();
     };
 
@@ -159,13 +160,13 @@ export class AnnotationList {
       } else if (e.key === "Escape") {
         e.preventDefault();
         labelEl.textContent = ann.label || "Untitled";
-        labelEl.style.display = "";
+        labelEl.removeClass("annotator-hidden");
         input.remove();
       }
     });
     input.addEventListener("click", (e) => e.stopPropagation());
 
-    labelEl.style.display = "none";
+    labelEl.addClass("annotator-hidden");
     labelEl.parentElement?.insertBefore(input, labelEl);
     input.focus();
     input.select();

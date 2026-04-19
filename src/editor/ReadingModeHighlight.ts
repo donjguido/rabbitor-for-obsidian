@@ -84,7 +84,7 @@ function wrapFirstMatch(
   const excerpt = ann.excerpt;
   if (!excerpt) return false;
 
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+  const walker = activeDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode: (node) => {
       const parent = (node as Text).parentElement;
       if (parent && parent.closest(".annotator-hl")) {
@@ -107,25 +107,29 @@ function wrapFirstMatch(
     const before = text.slice(0, idx);
     const after = text.slice(idx + excerpt.length);
 
-    const frag = document.createDocumentFragment();
-    if (before) frag.appendChild(document.createTextNode(before));
+    const frag = activeDocument.createDocumentFragment();
+    if (before) frag.appendChild(activeDocument.createTextNode(before));
 
-    const hl = document.createElement("span");
-    hl.className = `annotator-hl annotator-hl-${ann.color}`;
+    const hl = createSpan({
+      cls: `annotator-hl annotator-hl-${ann.color}`,
+      text: excerpt,
+    });
     hl.dataset.annotationId = ann.id;
-    hl.textContent = excerpt;
     frag.appendChild(hl);
 
-    const badge = document.createElement("span");
-    badge.className = `annotator-badge annotator-badge-${ann.color}`;
-    badge.textContent = String(number);
+    const badge = createSpan({
+      cls: `annotator-badge annotator-badge-${ann.color}`,
+      text: String(number),
+      attr: {
+        "aria-label": `Annotation ${number}`,
+        role: "button",
+        tabindex: "0",
+      },
+    });
     badge.dataset.annotationId = ann.id;
-    badge.setAttribute("aria-label", `Annotation ${number}`);
-    badge.setAttribute("role", "button");
-    badge.setAttribute("tabindex", "0");
     frag.appendChild(badge);
 
-    if (after) frag.appendChild(document.createTextNode(after));
+    if (after) frag.appendChild(activeDocument.createTextNode(after));
 
     const openChat = (e: Event) => {
       e.preventDefault();

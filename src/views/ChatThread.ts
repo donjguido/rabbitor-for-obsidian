@@ -66,15 +66,13 @@ export class ChatThread {
     this.inputAreaEl = inputArea;
 
     if (!this.plugin.providerManager.getActiveProvider()) {
-      const placeholder = inputArea.createDiv({ cls: "annotator-chat-no-provider" });
+      const placeholder = inputArea.createDiv({
+        cls: "annotator-chat-no-provider annotator-empty-placeholder",
+      });
       placeholder.setText("Configure an AI provider in settings to start chatting");
-      placeholder.style.cursor = "pointer";
-      placeholder.style.padding = "12px";
-      placeholder.style.textAlign = "center";
-      placeholder.style.color = "var(--text-muted)";
-      placeholder.style.fontSize = "var(--font-ui-small)";
       placeholder.addEventListener("click", () => {
-        (this.plugin.app as any).setting?.open?.();
+        const app = this.plugin.app as { setting?: { open?: () => void } };
+        app.setting?.open?.();
       });
       return;
     }
@@ -122,7 +120,7 @@ export class ChatThread {
         e.preventDefault();
         // If command suggest is open, pick the highlighted item
         if (this.commandSuggestEl && !this.commandSuggestEl.hasClass("annotator-hidden")) {
-          const active = this.commandSuggestEl.querySelector(".is-selected") as HTMLElement | null;
+          const active = this.commandSuggestEl.querySelector<HTMLElement>(".is-selected");
           if (active) {
             active.click();
             return;
@@ -139,7 +137,7 @@ export class ChatThread {
       } else if (e.key === "Tab") {
         if (this.commandSuggestEl && !this.commandSuggestEl.hasClass("annotator-hidden")) {
           e.preventDefault();
-          const active = this.commandSuggestEl.querySelector(".is-selected") as HTMLElement | null;
+          const active = this.commandSuggestEl.querySelector<HTMLElement>(".is-selected");
           if (active) active.click();
         }
       } else if (e.key === "Backspace") {
@@ -214,12 +212,18 @@ export class ChatThread {
   private autoGrowInput(): void {
     const el = this.inputEl;
     if (!el) return;
-    // Reset height so scrollHeight reflects current content, not previous size
-    el.style.height = "auto";
+    // Reset height so scrollHeight reflects current content, not previous size.
+    // Height is inherently dynamic (depends on textarea content), so this must
+    // be set at runtime; a static CSS class can't express it.
+    /* eslint-disable obsidianmd/no-static-styles-assignment */
+    el.setCssProps({ height: "auto" });
     const maxHeight = 160;
     const next = Math.min(el.scrollHeight, maxHeight);
-    el.style.height = `${next}px`;
-    el.style.overflowY = el.scrollHeight > maxHeight ? "auto" : "hidden";
+    el.setCssProps({
+      height: `${next}px`,
+      "overflow-y": el.scrollHeight > maxHeight ? "auto" : "hidden",
+    });
+    /* eslint-enable obsidianmd/no-static-styles-assignment */
   }
 
   focusInput(): void {
@@ -304,7 +308,7 @@ export class ChatThread {
             this.plugin.app.workspace.openLinkText(part.vaultPath, "");
           });
         } else {
-          thumb.style.display = "none";
+          thumb.addClass("annotator-hidden");
         }
         chip.createSpan({
           cls: "annotator-chat-attachment-label",
@@ -392,34 +396,37 @@ export class ChatThread {
 
   /** /attach — open the OS file picker and add picked files to pendingAttachments. */
   private async handleAttach(): Promise<void> {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.multiple = true;
-    input.accept = [
-      ".png", ".jpg", ".jpeg", ".gif", ".webp",
-      ".pdf",
-      ".txt", ".md", ".markdown",
-      ".json", ".yaml", ".yml", ".toml", ".xml", ".csv", ".log",
-      ".js", ".ts", ".tsx", ".jsx", ".mjs", ".cjs",
-      ".py", ".rb", ".go", ".rs", ".java", ".c", ".cpp", ".h", ".hpp", ".cs", ".php", ".swift", ".kt",
-      ".html", ".htm", ".css", ".scss", ".sass",
-      ".sh", ".bash", ".zsh", ".fish",
-      ".sql",
-    ].join(",");
-    input.style.display = "none";
+    const input = createEl("input", {
+      type: "file",
+      cls: "annotator-hidden-file-input",
+      attr: {
+        multiple: "true",
+        accept: [
+          ".png", ".jpg", ".jpeg", ".gif", ".webp",
+          ".pdf",
+          ".txt", ".md", ".markdown",
+          ".json", ".yaml", ".yml", ".toml", ".xml", ".csv", ".log",
+          ".js", ".ts", ".tsx", ".jsx", ".mjs", ".cjs",
+          ".py", ".rb", ".go", ".rs", ".java", ".c", ".cpp", ".h", ".hpp", ".cs", ".php", ".swift", ".kt",
+          ".html", ".htm", ".css", ".scss", ".sass",
+          ".sh", ".bash", ".zsh", ".fish",
+          ".sql",
+        ].join(","),
+      },
+    });
 
     const picked = await new Promise<File[]>((resolve) => {
       const onFocus = () => {
-        setTimeout(() => {
+        activeWindow.setTimeout(() => {
           if (!input.files || input.files.length === 0) resolve([]);
-          window.removeEventListener("focus", onFocus);
+          activeWindow.removeEventListener("focus", onFocus);
         }, 300);
       };
       input.addEventListener("change", () => {
-        window.removeEventListener("focus", onFocus);
+        activeWindow.removeEventListener("focus", onFocus);
         resolve(Array.from(input.files ?? []));
       }, { once: true });
-      window.addEventListener("focus", onFocus);
+      activeWindow.addEventListener("focus", onFocus);
       input.click();
     });
 
@@ -596,11 +603,12 @@ export class ChatThread {
   ): void {
     const current = fork.label || "Fork";
 
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = current;
-    input.className = "annotator-fork-rename-input";
-    input.setAttribute("aria-label", "Fork name");
+    const input = createEl("input", {
+      type: "text",
+      value: current,
+      cls: "annotator-fork-rename-input",
+      attr: { "aria-label": "Fork name" },
+    });
 
     let committed = false;
     const commit = () => {
@@ -619,7 +627,7 @@ export class ChatThread {
       if (committed) return;
       committed = true;
       input.remove();
-      select.style.display = "";
+      select.removeClass("annotator-hidden");
       renameBtn.disabled = false;
       onFinish?.();
     };
@@ -635,7 +643,7 @@ export class ChatThread {
       }
     });
 
-    select.style.display = "none";
+    select.addClass("annotator-hidden");
     renameBtn.disabled = true;
     pickerRow.insertBefore(input, select);
     input.focus();
@@ -940,12 +948,13 @@ export class ChatThread {
   }
 
   private startRename(titleEl: HTMLElement): void {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = this.annotation.label;
-    input.placeholder = "Untitled";
-    input.className = "annotator-rename-input";
-    input.setAttribute("aria-label", "Rename thread");
+    const input = createEl("input", {
+      type: "text",
+      value: this.annotation.label,
+      placeholder: "Untitled",
+      cls: "annotator-rename-input",
+      attr: { "aria-label": "Rename thread" },
+    });
 
     const commit = () => {
       const newLabel = input.value.trim();
@@ -954,7 +963,7 @@ export class ChatThread {
         this.plugin.store.updateAnnotation(this.annotation.id, { label: newLabel });
       }
       titleEl.textContent = newLabel || "Untitled";
-      titleEl.style.display = "";
+      titleEl.removeClass("annotator-hidden");
       input.remove();
     };
 
@@ -966,12 +975,12 @@ export class ChatThread {
       } else if (e.key === "Escape") {
         e.preventDefault();
         titleEl.textContent = this.annotation.label || "Untitled";
-        titleEl.style.display = "";
+        titleEl.removeClass("annotator-hidden");
         input.remove();
       }
     });
 
-    titleEl.style.display = "none";
+    titleEl.addClass("annotator-hidden");
     titleEl.parentElement?.insertBefore(input, titleEl);
     input.focus();
     input.select();
@@ -1085,7 +1094,7 @@ export class ChatThread {
         ? "Taking longer than expected. Check that the selected model supports vision input."
         : "Taking longer than expected. Press Esc to cancel.";
 
-      let slowTimer: number | null = window.setTimeout(() => {
+      let slowTimer: number | null = activeWindow.setTimeout(() => {
         slowTimer = null;
         if (!loading?.el) return;
         const existing = loading.el.querySelector(".annotator-chat-loading-slow-hint");
@@ -1098,8 +1107,8 @@ export class ChatThread {
 
       let inactivityTimer: number | null = null;
       const armInactivityTimer = () => {
-        if (inactivityTimer !== null) window.clearTimeout(inactivityTimer);
-        inactivityTimer = window.setTimeout(() => {
+        if (inactivityTimer !== null) activeWindow.clearTimeout(inactivityTimer);
+        inactivityTimer = activeWindow.setTimeout(() => {
           inactivityTimer = null;
           if (this.abortController) {
             timedOut = true;
@@ -1125,7 +1134,7 @@ export class ChatThread {
           }
           // Cancel the slow-hint timer — we're past "thinking" and into streaming.
           if (slowTimer !== null) {
-            window.clearTimeout(slowTimer);
+            activeWindow.clearTimeout(slowTimer);
             slowTimer = null;
           }
           // Reset inactivity timer on every token so a healthy stream keeps going.
@@ -1167,8 +1176,8 @@ export class ChatThread {
           pendingError = err instanceof Error ? err.message : "Unknown error";
         }
       } finally {
-        if (slowTimer !== null) window.clearTimeout(slowTimer);
-        if (inactivityTimer !== null) window.clearTimeout(inactivityTimer);
+        if (slowTimer !== null) activeWindow.clearTimeout(slowTimer);
+        if (inactivityTimer !== null) activeWindow.clearTimeout(inactivityTimer);
         this.abortController = null;
         loading?.cleanup();
         loading?.el.remove();
@@ -1525,10 +1534,10 @@ export class ChatThread {
       idx++;
     };
 
-    const initialTimeout = window.setTimeout(() => {
+    const initialTimeout = activeWindow.setTimeout(() => {
       showHint();
     }, 3000);
-    const interval = window.setInterval(() => {
+    const interval = activeWindow.setInterval(() => {
       if (idx === 0) return;
       showHint();
     }, 4000);
@@ -1538,8 +1547,8 @@ export class ChatThread {
     return {
       el: loading,
       cleanup: () => {
-        window.clearTimeout(initialTimeout);
-        window.clearInterval(interval);
+        activeWindow.clearTimeout(initialTimeout);
+        activeWindow.clearInterval(interval);
       },
     };
   }
@@ -1569,7 +1578,7 @@ export class ChatThread {
   /** Append a clickable "settings" link that opens this plugin's settings tab. */
   private appendSettingsLink(parent: HTMLElement): void {
     const link = parent.createEl("a", {
-      text: "settings",
+      text: "Settings",
       cls: "annotator-settings-link",
       href: "#",
     });
@@ -1631,7 +1640,7 @@ export class ChatThread {
    *  and (b) start composing the next message while waiting. The `sending`
    *  flag + disabled send button prevent concurrent sends. */
   private setInputEnabled(enabled: boolean): void {
-    const sendBtn = this.containerEl.querySelector(".annotator-send-btn") as HTMLButtonElement | null;
+    const sendBtn = this.containerEl.querySelector<HTMLButtonElement>(".annotator-send-btn");
     if (sendBtn) {
       sendBtn.disabled = !enabled;
     }

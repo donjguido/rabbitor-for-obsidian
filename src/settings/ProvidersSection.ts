@@ -175,7 +175,7 @@ export class ProvidersSection {
         .setName("API key")
         .addText((text) => {
           text.inputEl.type = "password";
-          text.inputEl.style.width = "250px";
+          text.inputEl.addClass("annotator-settings-input-wide");
           text.setValue(config.apiKey || "");
           text.setPlaceholder(config.type === "anthropic" ? "sk-ant-..." : "sk-...");
           text.onChange(async (value) => {
@@ -194,7 +194,7 @@ export class ProvidersSection {
       new Setting(containerEl)
         .setName("Base URL")
         .addText((text) => {
-          text.inputEl.style.width = "300px";
+          text.inputEl.addClass("annotator-settings-input-wider");
           text.setValue(config.baseUrl || "");
           text.setPlaceholder(DEFAULT_BASE_URLS[config.type] || "https://...");
           text.onChange(async (value) => {
@@ -248,8 +248,8 @@ export class ProvidersSection {
         btn.onClick(async () => {
           const provider = this.plugin.providerManager.getProvider(config.id);
           if (!provider) {
-            btn.setButtonText("\u2717 Provider not found");
-            setTimeout(() => btn.setButtonText("Test connection"), 3000);
+            btn.setButtonText("\u2717 provider not found");
+            activeWindow.setTimeout(() => btn.setButtonText("Test connection"), 3000);
             return;
           }
           btn.setButtonText("Testing...");
@@ -257,7 +257,7 @@ export class ProvidersSection {
           const valid = await provider.validateConfig();
           btn.setDisabled(false);
           btn.setButtonText(valid ? "\u2713 Connected" : "\u2717 Failed");
-          setTimeout(() => btn.setButtonText("Test connection"), 3000);
+          activeWindow.setTimeout(() => btn.setButtonText("Test connection"), 3000);
         });
       });
 

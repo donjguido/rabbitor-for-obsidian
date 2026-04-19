@@ -176,7 +176,7 @@ export class AnnotatorView extends ItemView {
   private onAnnotationDoubleClick(annotation: Annotation): void {
     this.selectedAnnotation = annotation;
     this.switchTab("chat");
-    setTimeout(() => {
+    activeWindow.setTimeout(() => {
       this.chatThread?.focusInput();
     }, 0);
   }
@@ -209,7 +209,7 @@ export class AnnotatorView extends ItemView {
     this.selectedAnnotation = annotation;
     this.switchTab("chat");
     // Focus the input after the DOM has rendered
-    setTimeout(() => {
+    activeWindow.setTimeout(() => {
       this.chatThread?.focusInput();
     }, 0);
   }

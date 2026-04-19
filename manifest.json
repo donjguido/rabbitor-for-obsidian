@@ -2,9 +2,9 @@
   "id": "annotator",
   "name": "Rabbitor",
   "version": "0.1.0",
-  "minAppVersion": "1.4.0",
+  "minAppVersion": "1.7.2",
   "description": "AI-powered document annotation with per-highlight conversation threads, multi-provider AI, branching edits, and annotation linking.",
   "author": "donjguido",
   "authorUrl": "https://github.com/donjguido",
-  "isDesktopOnly": false
+  "isDesktopOnly": true
 }

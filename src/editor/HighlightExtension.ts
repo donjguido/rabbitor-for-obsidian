@@ -26,13 +26,16 @@ class HighlightBadgeWidget extends WidgetType {
   }
 
   toDOM(): HTMLElement {
-    const badge = document.createElement("span");
-    badge.className = `annotator-badge annotator-badge-${this.info.color}`;
-    badge.textContent = String(this.info.number);
+    const badge = createSpan({
+      cls: `annotator-badge annotator-badge-${this.info.color}`,
+      text: String(this.info.number),
+      attr: {
+        "aria-label": `Annotation ${this.info.number}`,
+        role: "button",
+        tabindex: "0",
+      },
+    });
     badge.dataset.annotationId = this.info.id;
-    badge.setAttribute("aria-label", `Annotation ${this.info.number}`);
-    badge.setAttribute("role", "button");
-    badge.setAttribute("tabindex", "0");
     return badge;
   }
 

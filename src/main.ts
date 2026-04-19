@@ -88,7 +88,7 @@ export default class AnnotatorPlugin extends Plugin {
 
     this.addCommand({
       id: "toggle-panel",
-      name: "Toggle annotator panel",
+      name: "Toggle side panel",
       callback: () => this.activateView(),
     });
 
@@ -136,7 +136,7 @@ export default class AnnotatorPlugin extends Plugin {
 
     this.addCommand({
       id: "export-annotations-markdown",
-      name: "Export annotations as markdown",
+      name: "Export annotations as Markdown",
       callback: () => this.exportAnnotations("markdown"),
     });
 
@@ -216,8 +216,9 @@ export default class AnnotatorPlugin extends Plugin {
       this.settings = { ...DEFAULT_SETTINGS, ...data.settings };
     }
     // Migrate: strip legacy slashCommands from persisted settings
-    if ((this.settings as any).slashCommands) {
-      delete (this.settings as any).slashCommands;
+    const legacy = this.settings as unknown as Record<string, unknown>;
+    if (legacy.slashCommands) {
+      delete legacy.slashCommands;
       const data2 = (await this.loadData()) || {};
       data2.settings = this.settings;
       await this.saveData(data2);
@@ -365,7 +366,7 @@ export default class AnnotatorPlugin extends Plugin {
         if (view instanceof MarkdownView && view.editor) {
           resolve();
         } else {
-          setTimeout(check, 50);
+          activeWindow.setTimeout(check, 50);
         }
       };
       check();

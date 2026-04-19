@@ -1,3 +1,25 @@
+/* === Utility === */
+.annotator-hidden,
+.annotator-hidden-file-input {
+  display: none !important;
+}
+
+.annotator-empty-placeholder {
+  cursor: pointer;
+  padding: 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.annotator-settings-input-wide {
+  width: 250px;
+}
+
+.annotator-settings-input-wider {
+  width: 300px;
+}
+
 /* === Highlight decorations (in editor) === */
 .annotator-hl {
   border-radius: 2px;
@@ -429,10 +451,10 @@
 }
 
 .annotator-color-btn {
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  min-height: 24px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   border: 2px solid transparent;
   cursor: pointer;
@@ -440,11 +462,21 @@
   padding: 0;
   -webkit-appearance: none;
   appearance: none;
+  background-clip: padding-box;
 }
+
+.annotator-selection-menu .annotator-color-btn-purple { background-color: #a882ff; }
+.annotator-selection-menu .annotator-color-btn-yellow { background-color: #e0de71; }
+.annotator-selection-menu .annotator-color-btn-blue   { background-color: #6cb6ff; }
+.annotator-selection-menu .annotator-color-btn-green  { background-color: #6bce8a; }
+.annotator-selection-menu .annotator-color-btn-pink   { background-color: #f17eb8; }
+.annotator-selection-menu .annotator-color-btn-orange { background-color: #e9973f; }
+.annotator-selection-menu .annotator-color-btn-red    { background-color: #e5484d; }
+.annotator-selection-menu .annotator-color-btn-teal   { background-color: #4ec9b0; }
 
 .annotator-color-btn:hover {
   border-color: var(--text-normal);
-  transform: scale(1.15);
+  transform: scale(1.1);
 }
 
 .annotator-color-btn:focus-visible {

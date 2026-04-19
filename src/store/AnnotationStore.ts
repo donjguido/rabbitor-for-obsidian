@@ -9,7 +9,7 @@ function generateId(): string {
 
 export class AnnotationStore {
   private data: Map<string, Annotation[]> = new Map();
-  private saveTimeout: ReturnType<typeof setTimeout> | null = null;
+  private saveTimeout: number | null = null;
   private plugin: AnnotatorPlugin;
 
   constructor(plugin: AnnotatorPlugin) {
@@ -40,8 +40,8 @@ export class AnnotationStore {
           if (!branch.createdAt) branch.createdAt = new Date().toISOString();
         }
         // Strip dead Thread.provider field from legacy data
-        delete (ann.thread as any).provider;
-        delete (ann as any).attachments;
+        delete (ann.thread as unknown as Record<string, unknown>).provider;
+        delete (ann as unknown as Record<string, unknown>).attachments;
         const existing = this.data.get(ann.fileVaultPath) || [];
         existing.push(ann);
         this.data.set(ann.fileVaultPath, existing);
@@ -51,7 +51,7 @@ export class AnnotationStore {
 
   async save(): Promise<void> {
     if (this.saveTimeout) {
-      clearTimeout(this.saveTimeout);
+      activeWindow.clearTimeout(this.saveTimeout);
       this.saveTimeout = null;
     }
     const allAnnotations: Annotation[] = [];
@@ -68,8 +68,8 @@ export class AnnotationStore {
   }
 
   private scheduleSave(): void {
-    if (this.saveTimeout) clearTimeout(this.saveTimeout);
-    this.saveTimeout = setTimeout(() => this.save(), 2000);
+    if (this.saveTimeout) activeWindow.clearTimeout(this.saveTimeout);
+    this.saveTimeout = activeWindow.setTimeout(() => this.save(), 2000);
   }
 
   getAll(): Annotation[] {

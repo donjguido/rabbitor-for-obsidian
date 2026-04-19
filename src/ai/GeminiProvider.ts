@@ -1,9 +1,15 @@
+import { requestUrl } from "obsidian";
 import type { AIProvider } from "./AIProvider";
 import type { ProviderConfig, MessageContent } from "../types";
 import { getText, getImageParts, getDocumentParts } from "./messageContent";
 import { loadBinaryPart } from "./multimodal";
 
 const GEMINI_BASE = "https://generativelanguage.googleapis.com";
+
+interface GeminiModel {
+  name: string;
+  supportedGenerationMethods?: string[];
+}
 
 export class GeminiProvider implements AIProvider {
   readonly type = "gemini";
@@ -20,7 +26,7 @@ export class GeminiProvider implements AIProvider {
     messages: Array<{ role: "user" | "assistant"; content: MessageContent }>,
     systemPrompt: string,
     options: { maxTokens: number; temperature: number },
-    signal?: AbortSignal,
+    _signal?: AbortSignal,
     onToken?: (chunk: string) => void
   ): Promise<string> {
     const contents = await Promise.all(
@@ -47,10 +53,11 @@ export class GeminiProvider implements AIProvider {
     );
 
     const url =
-      `${GEMINI_BASE}/v1beta/models/${this.config.model}:streamGenerateContent` +
-      `?alt=sse&key=${encodeURIComponent(this.config.apiKey || "")}`;
+      `${GEMINI_BASE}/v1beta/models/${this.config.model}:generateContent` +
+      `?key=${encodeURIComponent(this.config.apiKey || "")}`;
 
-    const response = await fetch(url, {
+    const response = await requestUrl({
+      url,
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -61,85 +68,43 @@ export class GeminiProvider implements AIProvider {
           temperature: options.temperature,
         },
       }),
-      signal,
+      throw: false,
     });
 
-    if (!response.ok) {
-      const body = await response.text();
-      let errorMessage: string;
-      try {
-        const parsed = JSON.parse(body);
-        errorMessage = parsed?.error?.message || `API error ${response.status}`;
-      } catch {
-        errorMessage = `API error ${response.status}: ${body.slice(0, 200)}`;
-      }
-      throw new Error(errorMessage);
+    if (response.status < 200 || response.status >= 300) {
+      const message = response.json?.error?.message
+        ?? `API error ${response.status}: ${(response.text ?? "").slice(0, 200)}`;
+      throw new Error(message);
     }
 
-    if (!response.body) {
-      throw new Error("No response body from Gemini stream");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let buffer = "";
-    let full = "";
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-
-        let newlineIdx: number;
-        while ((newlineIdx = buffer.indexOf("\n")) !== -1) {
-          const line = buffer.slice(0, newlineIdx).trim();
-          buffer = buffer.slice(newlineIdx + 1);
-          if (!line.startsWith("data: ")) continue;
-          const payload = line.slice(6);
-          let event: any;
-          try {
-            event = JSON.parse(payload);
-          } catch {
-            continue;
-          }
-          const text = event?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            full += text;
-            onToken?.(text);
-          }
-        }
-      }
-    } finally {
-      try {
-        reader.releaseLock();
-      } catch {
-        // Reader may already be closed
-      }
-    }
+    const candidates = response.json?.candidates as
+      | Array<{ content?: { parts?: Array<{ text?: string }> } }>
+      | undefined;
+    const parts = candidates?.[0]?.content?.parts ?? [];
+    const full = parts
+      .map(p => p.text ?? "")
+      .join("");
 
     if (full.length === 0) {
-      throw new Error("No text content in Gemini streamed response");
+      throw new Error("No text content in Gemini response");
     }
+    onToken?.(full);
     return full;
   }
 
   async listModels(): Promise<string[]> {
     const url = `${GEMINI_BASE}/v1beta/models?key=${encodeURIComponent(this.config.apiKey || "")}`;
-    const response = await fetch(url);
+    const response = await requestUrl({ url, method: "GET", throw: false });
 
-    if (!response.ok) {
+    if (response.status < 200 || response.status >= 300) {
       throw new Error(`Failed to fetch Gemini models: ${response.status}`);
     }
 
-    const body = await response.json();
-    const models: string[] = (body.models || [])
-      .filter((m: any) =>
-        m.supportedGenerationMethods?.includes("generateContent")
-      )
-      .map((m: any) => (m.name as string).replace("models/", ""))
+    const models = response.json?.models as GeminiModel[] | undefined;
+    return (models ?? [])
+      .filter(m => m.supportedGenerationMethods?.includes("generateContent"))
+      .map(m => m.name.replace("models/", ""))
       .sort();
-    return models;
   }
 
   async validateConfig(): Promise<boolean> {

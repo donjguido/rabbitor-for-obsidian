@@ -95,7 +95,7 @@ export class NoteSuggest {
 
   private onBlur(): void {
     // Delay to allow click on popup item to fire first
-    setTimeout(() => this.dismissPopup(), 150);
+    activeWindow.setTimeout(() => this.dismissPopup(), 150);
   }
 
   private updateResults(query: string): void {

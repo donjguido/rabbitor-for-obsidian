@@ -5,17 +5,6 @@ import { HIGHLIGHT_COLORS } from "../constants";
 import type { HighlightColor } from "../types";
 import type AnnotatorPlugin from "../main";
 
-const COLOR_HEX: Record<HighlightColor, string> = {
-  purple: "#a882ff",
-  yellow: "#e0de71",
-  blue: "#6cb6ff",
-  green: "#6bce8a",
-  pink: "#f17eb8",
-  orange: "#e9973f",
-  red: "#e5484d",
-  teal: "#4ec9b0",
-};
-
 function createAnnotationFromSelection(plugin: AnnotatorPlugin, view: EditorView, color: string): void {
   const state = view.state;
   const sel = state.selection.main;
@@ -53,21 +42,21 @@ export function createSelectionMenu(plugin: AnnotatorPlugin) {
         pos: from,
         above: true,
         create(view: EditorView) {
-          const dom = document.createElement("div");
-          dom.className = "annotator-selection-menu";
+          const dom = createDiv({ cls: "annotator-selection-menu" });
 
           for (const color of HIGHLIGHT_COLORS) {
-            const btn = document.createElement("button");
-            btn.className = `annotator-color-btn`;
-            btn.style.backgroundColor = COLOR_HEX[color];
-            btn.setAttribute("aria-label", `Annotate with ${color}`);
-            btn.setAttribute("data-tooltip-position", "top");
+            const btn = dom.createEl("button", {
+              cls: `annotator-color-btn annotator-color-btn-${color}`,
+              attr: {
+                "aria-label": `Annotate with ${color}`,
+                "data-tooltip-position": "top",
+              },
+            });
             btn.addEventListener("click", (e) => {
               e.preventDefault();
               e.stopPropagation();
               createAnnotationFromSelection(plugin, view, color);
             });
-            dom.appendChild(btn);
           }
 
           return { dom };

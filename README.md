@@ -4,7 +4,7 @@ Go down the rabbit hole of knowledge. Highlight passages in your notes and have 
 
 Rabbitor brings per-highlight conversation threads, multi-provider AI, and branching edits to your vault. Every thread lives next to the note it came from, exportable as markdown.
 
-> **Status:** pre-release (0.1.0). Not yet submitted to the Obsidian community plugin store. Install manually (see below). Desktop-only for now — mobile has not been tested.
+> **Status:** pre-release (0.1.0). Submitted to the Obsidian community plugin store and currently under review ([obsidianmd/obsidian-releases#12140](https://github.com/obsidianmd/obsidian-releases/pull/12140)). Install manually or via BRAT in the meantime (see below). Desktop-only for now — mobile has not been tested.
 
 ![Rabbitor demo](docs/screenshots/demo.gif)
 
@@ -35,7 +35,7 @@ Rabbitor brings per-highlight conversation threads, multi-provider AI, and branc
 
 ### Community store
 
-Not yet available.
+Under review — see [obsidianmd/obsidian-releases#12140](https://github.com/obsidianmd/obsidian-releases/pull/12140).
 
 ## Usage
 

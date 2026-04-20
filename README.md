@@ -6,23 +6,7 @@ Rabbitor brings per-highlight conversation threads, multi-provider AI, and branc
 
 > **Status:** pre-release (0.1.0). Not yet submitted to the Obsidian community plugin store. Install manually (see below). Desktop-only for now — mobile has not been tested.
 
-## Screenshots
-
 ![Rabbitor demo](docs/screenshots/demo.gif)
-
-![A note with highlights and the thread sidebar open](docs/screenshots/hero.png)
-
-![Selection color picker](docs/screenshots/color-picker.png)
-
-![Sidebar tabs](docs/screenshots/side-bar.png)
-
-![Slash commands](docs/screenshots/slash-commands.png)
-
-![Branching a conversation](docs/screenshots/fork.png)
-
-![Provider settings](docs/screenshots/settings_providers.png)
-
-![Exported thread rendered in Obsidian](docs/screenshots/exported_note.png)
 
 ## Features
 
@@ -32,6 +16,8 @@ Rabbitor brings per-highlight conversation threads, multi-provider AI, and branc
 - **Document attachments** — Drop PDFs or markdown notes into a thread as context. Capability warnings flag models that can't handle PDFs.
 - **Markdown export** — Export threads as plain markdown with branches and Obsidian embeds preserved.
 - **Per-note storage** — Highlights and threads live in a sidecar JSON, so your notes stay clean.
+
+![A note with highlights and the thread sidebar open](docs/screenshots/hero.png)
 
 ## Installation
 
@@ -58,6 +44,20 @@ Not yet available.
 3. Click the highlight (or open the right sidebar) to start a thread.
 4. Configure your AI provider in **Settings → Rabbitor**.
 
+![Selection color picker](docs/screenshots/color-picker.png)
+
+Highlights, threads, and settings live in the right sidebar:
+
+![Sidebar tabs](docs/screenshots/side-bar.png)
+
+Drop slash commands into any message to quickly pull in context or rerun common prompts:
+
+![Slash commands](docs/screenshots/slash-commands.png)
+
+Fork from any message to explore an alternate line of reasoning without losing the original:
+
+![Branching a conversation](docs/screenshots/fork.png)
+
 ## Configuration
 
 Rabbitor supports these AI providers out of the box:
@@ -72,6 +72,12 @@ Rabbitor supports these AI providers out of the box:
 | Custom        | URL + optional key | Any OpenAI-compatible endpoint |
 
 Keys are stored in Obsidian's plugin data directory on your machine. Rabbitor never phones home.
+
+![Provider settings](docs/screenshots/settings_providers.png)
+
+Threads export to plain markdown with branches and Obsidian embeds preserved:
+
+![Exported thread rendered in Obsidian](docs/screenshots/exported_note.png)
 
 ## Development
 

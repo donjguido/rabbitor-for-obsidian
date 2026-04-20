@@ -8,15 +8,21 @@ Rabbitor brings per-highlight conversation threads, multi-provider AI, and branc
 
 ## Screenshots
 
-> TODO: add before submitting to the community plugin store. Drop files into `docs/screenshots/` and link them here.
->
-> Checklist of shots to capture:
-> - [ ] Hero shot — a note with several highlights + the right sidebar open on a thread
-> - [ ] Selection tooltip / color picker over a text selection
-> - [ ] Sidebar tabs (Highlights / Threads / Settings) with a populated thread list
-> - [ ] Thread view showing streamed reply, message actions, and a branched conversation
-> - [ ] Settings page — provider list with a couple of providers configured
-> - [ ] Markdown export of a thread (screenshot of the exported file rendered in Obsidian)
+![Rabbitor demo](docs/screenshots/demo.gif)
+
+![A note with highlights and the thread sidebar open](docs/screenshots/hero.png)
+
+![Selection color picker](docs/screenshots/color-picker.png)
+
+![Sidebar tabs](docs/screenshots/side-bar.png)
+
+![Slash commands](docs/screenshots/slash-commands.png)
+
+![Branching a conversation](docs/screenshots/fork.png)
+
+![Provider settings](docs/screenshots/settings_providers.png)
+
+![Exported thread rendered in Obsidian](docs/screenshots/exported_note.png)
 
 ## Features
 

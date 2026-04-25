@@ -209,7 +209,7 @@ export class ProvidersSection {
     }
 
     // Model
-    this.renderModelField(containerEl, config);
+    void this.renderModelField(containerEl, config);
 
     // Max tokens
     new Setting(containerEl)
@@ -303,7 +303,7 @@ export class ProvidersSection {
       const provider = this.plugin.providerManager.getProvider(config.id);
       if (provider && (config.apiKey || config.type === "ollama")) {
         modelSetting.setDesc("Fetching models...");
-        this.fetchAndShowModels(modelSetting, config, provider);
+        void this.fetchAndShowModels(modelSetting, config, provider);
       } else {
         // No API key yet — show freeform
         this.addModelFreeform(modelSetting, config);
@@ -378,9 +378,9 @@ export class ProvidersSection {
 }
 
 class ProviderTypePicker extends FuzzySuggestModal<string> {
-  private onChoose: (type: string) => void;
+  private onChoose: (type: string) => void | Promise<void>;
 
-  constructor(app: App, onChoose: (type: string) => void) {
+  constructor(app: App, onChoose: (type: string) => void | Promise<void>) {
     super(app);
     this.onChoose = onChoose;
     this.setPlaceholder("Choose provider type");
@@ -395,15 +395,15 @@ class ProviderTypePicker extends FuzzySuggestModal<string> {
   }
 
   onChooseItem(item: string): void {
-    this.onChoose(item);
+    void this.onChoose(item);
   }
 }
 
 class ConfirmDeleteModal extends Modal {
   private name: string;
-  private onConfirm: () => void;
+  private onConfirm: () => void | Promise<void>;
 
-  constructor(app: App, name: string, onConfirm: () => void) {
+  constructor(app: App, name: string, onConfirm: () => void | Promise<void>) {
     super(app);
     this.name = name;
     this.onConfirm = onConfirm;
@@ -423,7 +423,7 @@ class ConfirmDeleteModal extends Modal {
     const confirmBtn = buttonRow.createEl("button", { text: "Delete" });
     confirmBtn.addClass("mod-warning");
     confirmBtn.addEventListener("click", () => {
-      this.onConfirm();
+      void this.onConfirm();
       this.close();
     });
   }

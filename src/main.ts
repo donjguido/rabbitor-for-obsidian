@@ -1,5 +1,5 @@
 import { App, MarkdownView, Modal, Plugin, TFile, Notice, Editor, type MarkdownFileInfo } from "obsidian";
-import type { EditorView as CMEditorView } from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
 import { AnnotatorView, VIEW_TYPE_ANNOTATOR } from "./views/AnnotatorView";
 import { AnnotatorSettingsTab } from "./settings/SettingsTab";
 import { AnnotationStore } from "./store/AnnotationStore";
@@ -34,7 +34,7 @@ export default class AnnotatorPlugin extends Plugin {
     );
 
     this.registerEditorExtension(createHighlightExtension());
-    this.registerEditorExtension(createHighlightClickHandler((id) => this.onHighlightClick(id)));
+    this.registerEditorExtension(createHighlightClickHandler((id) => { void this.onHighlightClick(id); }));
     this.registerEditorExtension(createSelectionMenu(this));
     this.registerEditorExtension(
       createHighlightPositionSync(
@@ -83,7 +83,7 @@ export default class AnnotatorPlugin extends Plugin {
     this.registerMarkdownPostProcessor(createReadingModeProcessor(this));
 
     this.addRibbonIcon("highlighter", "Annotator", () => {
-      this.activateView();
+      void this.activateView();
     });
 
     this.addCommand({
@@ -106,7 +106,7 @@ export default class AnnotatorPlugin extends Plugin {
           from,
           to
         );
-        this.openChatForAnnotation(annotation);
+        void this.openChatForAnnotation(annotation);
       },
     });
 
@@ -165,8 +165,8 @@ export default class AnnotatorPlugin extends Plugin {
 
     this.addSettingTab(new AnnotatorSettingsTab(this.app, this));
 
-    this.registerObsidianProtocolHandler("annotator", async (params) => {
-      this.handleAnnotatorUri(params);
+    this.registerObsidianProtocolHandler("annotator", (params) => {
+      void this.handleAnnotatorUri(params);
     });
 
     this.registerEvent(
@@ -198,7 +198,7 @@ export default class AnnotatorPlugin extends Plugin {
               .setIcon("highlighter")
               .onClick(() => {
                 const annotation = this.store.createAnnotation(filePath, selection, from, to);
-                this.openChatForAnnotation(annotation);
+                void this.openChatForAnnotation(annotation);
               });
           });
         }
@@ -206,8 +206,8 @@ export default class AnnotatorPlugin extends Plugin {
     );
   }
 
-  async onunload(): Promise<void> {
-    await this.store.save();
+  onunload(): void {
+    void this.store.save();
   }
 
   async loadSettings(): Promise<void> {
@@ -247,7 +247,7 @@ export default class AnnotatorPlugin extends Plugin {
       });
       leaf = rightLeaf;
     }
-    workspace.revealLeaf(leaf);
+    void workspace.revealLeaf(leaf);
   }
 
   getAnnotatorView(): AnnotatorView | null {
@@ -294,8 +294,7 @@ export default class AnnotatorPlugin extends Plugin {
         color: ann.color,
         number: i + 1,
       }));
-      // @ts-expect-error — Obsidian internal: MarkdownView exposes cm editor
-      const cmEditor = view.editor?.cm as CMEditorView | undefined;
+      const cmEditor = (view.editor as unknown as { cm?: EditorView }).cm;
       if (cmEditor) {
         cmEditor.dispatch({
           effects: setHighlights.of(highlights),
@@ -329,7 +328,7 @@ export default class AnnotatorPlugin extends Plugin {
     if (!markdownView?.editor) return;
 
     // Reveal the leaf first so the editor is visible
-    this.app.workspace.revealLeaf(markdownView.leaf);
+    void this.app.workspace.revealLeaf(markdownView.leaf);
 
     const pos = markdownView.editor.offsetToPos(annotation.from);
     markdownView.editor.setCursor(pos);

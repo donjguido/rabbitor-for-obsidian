@@ -126,7 +126,7 @@ export class ChatThread {
             return;
           }
         }
-        this.sendMessage();
+        void this.sendMessage();
       } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         if (this.commandSuggestEl && !this.commandSuggestEl.hasClass("annotator-hidden")) {
           e.preventDefault();
@@ -202,7 +202,7 @@ export class ChatThread {
       text: "Current model may not support images.",
     });
 
-    sendBtn.addEventListener("click", () => this.sendMessage());
+    sendBtn.addEventListener("click", () => { void this.sendMessage(); });
 
     // Initial sizing in case of default content
     this.autoGrowInput();
@@ -214,16 +214,14 @@ export class ChatThread {
     if (!el) return;
     // Reset height so scrollHeight reflects current content, not previous size.
     // Height is inherently dynamic (depends on textarea content), so this must
-    // be set at runtime; a static CSS class can't express it.
-    /* eslint-disable obsidianmd/no-static-styles-assignment */
-    el.setCssProps({ height: "auto" });
+    // be set at runtime via CSS variables consumed by the stylesheet.
+    el.setCssProps({ "--annotator-chat-textarea-height": "auto" });
     const maxHeight = 160;
     const next = Math.min(el.scrollHeight, maxHeight);
     el.setCssProps({
-      height: `${next}px`,
-      "overflow-y": el.scrollHeight > maxHeight ? "auto" : "hidden",
+      "--annotator-chat-textarea-height": `${next}px`,
+      "--annotator-chat-textarea-overflow": el.scrollHeight > maxHeight ? "auto" : "hidden",
     });
-    /* eslint-enable obsidianmd/no-static-styles-assignment */
   }
 
   focusInput(): void {
@@ -305,7 +303,7 @@ export class ChatThread {
         if (file instanceof TFile) {
           thumb.src = this.plugin.app.vault.getResourcePath(file);
           thumb.addEventListener("click", () => {
-            this.plugin.app.workspace.openLinkText(part.vaultPath, "");
+            void this.plugin.app.workspace.openLinkText(part.vaultPath, "");
           });
         } else {
           thumb.addClass("annotator-hidden");
@@ -320,7 +318,7 @@ export class ChatThread {
         const iconEl = chip.createSpan({ cls: "annotator-chat-attachment-icon" });
         setIcon(iconEl, "file-text");
         iconEl.addEventListener("click", () => {
-          this.plugin.app.workspace.openLinkText(item.part.vaultPath, "");
+          void this.plugin.app.workspace.openLinkText(item.part.vaultPath, "");
         });
         const filename = item.part.vaultPath.split("/").pop() || item.part.vaultPath;
         chip.createSpan({
@@ -334,7 +332,7 @@ export class ChatThread {
         const iconEl = chip.createSpan({ cls: "annotator-chat-attachment-icon" });
         setIcon(iconEl, "file-code");
         iconEl.addEventListener("click", () => {
-          this.plugin.app.workspace.openLinkText(item.vaultPath, "");
+          void this.plugin.app.workspace.openLinkText(item.vaultPath, "");
         });
         chip.createSpan({
           cls: "annotator-chat-attachment-label",
@@ -693,7 +691,7 @@ export class ChatThread {
         });
         if (token.notePath) {
           linkEl.addEventListener("click", () => {
-            this.plugin.app.workspace.openLinkText(token.notePath!, "");
+            void this.plugin.app.workspace.openLinkText(token.notePath!, "");
           });
         }
       } else {
@@ -713,7 +711,7 @@ export class ChatThread {
           },
         });
         thumb.addEventListener("click", () => {
-          this.plugin.app.workspace.openLinkText(img.vaultPath, "");
+          void this.plugin.app.workspace.openLinkText(img.vaultPath, "");
         });
       } else {
         body.createDiv({
@@ -736,7 +734,7 @@ export class ChatThread {
       if (file instanceof TFile) {
         chip.addClass("is-clickable");
         chip.addEventListener("click", () => {
-          this.plugin.app.workspace.openLinkText(doc.vaultPath, "");
+          void this.plugin.app.workspace.openLinkText(doc.vaultPath, "");
         });
       } else {
         chip.addClass("is-broken");
@@ -774,7 +772,7 @@ export class ChatThread {
           attr: { "aria-label": "Regenerate response" },
         });
         setIcon(regenBtn, "refresh-cw");
-        regenBtn.addEventListener("click", () => this.regenerateFromAssistant(pathIndex, path));
+        regenBtn.addEventListener("click", () => { void this.regenerateFromAssistant(pathIndex, path); });
       }
     }
   }
@@ -1290,7 +1288,7 @@ export class ChatThread {
     }
 
     const cache = this.plugin.app.vault.cachedRead(activeFile);
-    cache.then((docText) => {
+    void cache.then((docText) => {
       const lower = docText.toLowerCase();
       const queryLower = query.toLowerCase();
       const matches: string[] = [];
@@ -1428,7 +1426,7 @@ export class ChatThread {
     const uri = `obsidian://annotator?id=${encodeURIComponent(this.annotation.id)}&file=${encodeURIComponent(this.annotation.fileVaultPath)}`;
     const label = this.annotation.label || this.annotation.excerpt.slice(0, 40);
     const link = `[${label}](${uri})`;
-    navigator.clipboard.writeText(link);
+    void navigator.clipboard.writeText(link);
     this.addSystemMessage("Link copied to clipboard.");
   }
 

@@ -34,19 +34,21 @@ export class AnnotatorView extends ItemView {
     return "highlighter";
   }
 
-  async onOpen(): Promise<void> {
+  onOpen(): Promise<void> {
     const container = this.containerEl.children[1] as HTMLElement;
     container.empty();
     container.addClass("annotator-panel");
     this.renderTabs(container);
     this.contentEl_ = container.createDiv({ cls: "annotator-content" });
     this.renderContent();
+    return Promise.resolve();
   }
 
-  async onClose(): Promise<void> {
+  onClose(): Promise<void> {
     this.chatThread?.destroy();
     this.annotationList = null;
     this.chatThread = null;
+    return Promise.resolve();
   }
 
   private renderTabs(container: HTMLElement): void {
@@ -157,7 +159,7 @@ export class AnnotatorView extends ItemView {
       textEl.createDiv({ cls: "annotator-export-label", text: opt.label });
       textEl.createDiv({ cls: "annotator-export-desc", text: opt.description });
 
-      const handler = () => this.plugin.exportAnnotations(opt.format);
+      const handler = () => { void this.plugin.exportAnnotations(opt.format); };
       card.addEventListener("click", handler);
       card.addEventListener("keydown", (e: KeyboardEvent) => {
         if (e.key === "Enter" || e.key === " ") {

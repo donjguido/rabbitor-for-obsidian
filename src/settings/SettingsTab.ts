@@ -96,8 +96,7 @@ export class AnnotatorSettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Assistant display name")
-      // eslint-disable-next-line obsidianmd/ui/sentence-case -- ChatGPT is a proper noun
-      .setDesc("Label used for AI messages in the chat (e.g., Claude, ChatGPT).")
+      .setDesc("Label used for AI messages in the chat.")
       .addText((text) => {
         text.setPlaceholder("Claude");
         text.setValue(this.plugin.settings.aiDisplayName);

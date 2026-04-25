@@ -21,7 +21,7 @@ function createAnnotationFromSelection(plugin: AnnotatorPlugin, view: EditorView
   );
   // Clear selection after annotating so the tooltip disappears
   view.dispatch({ selection: { anchor: sel.to } });
-  plugin.openChatForAnnotation(annotation);
+  void plugin.openChatForAnnotation(annotation);
 }
 
 export function createSelectionMenu(plugin: AnnotatorPlugin) {

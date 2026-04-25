@@ -398,8 +398,9 @@
   min-height: 32px;
   max-height: 160px;
   line-height: 1.4;
-  overflow-y: hidden;
+  overflow-y: var(--annotator-chat-textarea-overflow, hidden);
   box-sizing: border-box;
+  height: var(--annotator-chat-textarea-height, auto);
 }
 
 .annotator-chat-input-row input:focus,
